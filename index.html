@@ -35,43 +35,31 @@
     map.on('load', function () {
       // Add a layer showing the state polygons.
       map.addLayer({
-        'id': 'hk2008-layer',
-        'type': 'fill',
-        'source': {
-          'type': 'geojson',
-          'data': 'https://sjliu.me/hkmap/data/landuse2008.geojson'
-          },
-          'paint': {
-          'fill-color': 'rgba(100, 100, 100, 0.4)',
-          'fill-outline-color': 'rgba(100, 100, 100, 0.8)',
-          },
-      });
-      map.addLayer({
         'id': 'hk2018-layer',
         'type': 'fill',
         'source': {
           'type': 'geojson',
-          'data': 'https://sjliu.me/hkmap/data/landuse2018.geojson'
+          'data': 'https://sjliu.me/hkmap-red-blue-light/data/red_blue_tmp0304.geojson'
         },
         'paint': {
           // 'fill-color': 'rgba(200, 100, 240, 0.4)',
           'fill-color': [
             "step",
             ["get", "DN"],
-            'rgba(10, 100, 240, 0.4)',
-            3,
-            'rgba(50, 100, 240, 0.4)',
-            10,
-            'rgba(200, 100, 240, 0.4)',
+            'rgba(0, 0, 255, 0.4)',
+            1,
+            'rgba(255, 0, 0, 0.4)',
+            2,
+            'rgba(100, 100, 100, 0.4)',
           ],
           // 'fill-outline-color': 'rgba(200, 100, 240, 0.8)'
           'fill-outline-color': [
             "step",
             ["get", "DN"],
             'rgba(10, 100, 240, 0.8)',
-            3,
+            1,
             'rgba(50, 100, 240, 0.8)',
-            10,
+            2,
             'rgba(200, 100, 240, 0.8)',
           ],
         }
