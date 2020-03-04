@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>HK Map</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1Ijoic3RvcDY4IiwiYSI6ImNqY2tqdmY5ZjN1c2kzM28zN3pncTkxc3kifQ.5O5ns1xgihc9i6XvQxCFJQ';
+    var map = new mapboxgl.Map({
+      container: "map",
+      // style: "mapbox://styles/mapbox/streets-v11",
+      style: "mapbox://styles/mapbox/satellite-streets-v9",
+      center: [114.05, 22.35],
+      zoom: 10
+    });
+
+    map.on('load', function () {
+      // Add a layer showing the state polygons.
+      map.addLayer({
+        'id': 'hk2008-layer',
+        'type': 'fill',
+        'source': {
+          'type': 'geojson',
+          'data': 'https://sjliu.me/hkmap/data/landuse2008.geojson'
+          },
+          'paint': {
+          'fill-color': 'rgba(100, 100, 100, 0.4)',
+          'fill-outline-color': 'rgba(100, 100, 100, 0.8)',
+          },
+      });
+      map.addLayer({
+        'id': 'hk2018-layer',
+        'type': 'fill',
+        'source': {
+          'type': 'geojson',
+          'data': 'https://sjliu.me/hkmap/data/landuse2018.geojson'
+        },
+        'paint': {
+          // 'fill-color': 'rgba(200, 100, 240, 0.4)',
+          'fill-color': [
+            "step",
+            ["get", "DN"],
+            'rgba(10, 100, 240, 0.4)',
+            3,
+            'rgba(50, 100, 240, 0.4)',
+            10,
+            'rgba(200, 100, 240, 0.4)',
+          ],
+          // 'fill-outline-color': 'rgba(200, 100, 240, 0.8)'
+          'fill-outline-color': [
+            "step",
+            ["get", "DN"],
+            'rgba(10, 100, 240, 0.8)',
+            3,
+            'rgba(50, 100, 240, 0.8)',
+            10,
+            'rgba(200, 100, 240, 0.8)',
+          ],
+        }
+      });
+      // When a click event occurs on a feature in the states layer, open a popup at the
+      // location of the click, with description HTML from its properties.
+      map.on('click', 'hk2018-layer', function (e) {
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(e.features[0].properties.GridcodeCl)
+          //.setHTML(e.features[0].properties.classClass)
+          .addTo(map);
+      });
+      map.on('contextmenu', 'hk2008-layer', function (e) {
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          //.setHTML(e.features[0].properties.GridcodeCl)
+          .setHTML(e.features[0].properties.classClass)
+          .addTo(map);
+      });
+
+      // Change the cursor to a pointer when the mouse is over the states layer.
+      map.on('mouseenter', 'hk2018-layer', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+      map.on('mouseenter', 'hk2008-layer', function () {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'hk2018-layer', function () {
+        map.getCanvas().style.cursor = '';
+      });
+      map.on('mouseleave', 'hk2008-layer', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+  </script>
+</body>
+</html>
