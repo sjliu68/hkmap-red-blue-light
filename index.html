@@ -26,7 +26,6 @@
     mapboxgl.accessToken = 'pk.eyJ1Ijoic3RvcDY4IiwiYSI6ImNqY2tqdmY5ZjN1c2kzM28zN3pncTkxc3kifQ.5O5ns1xgihc9i6XvQxCFJQ';
     var map = new mapboxgl.Map({
       container: "map",
-      // style: "mapbox://styles/mapbox/streets-v11",
       style: "mapbox://styles/mapbox/satellite-streets-v9",
       center: [114.05, 22.35],
       zoom: 10
@@ -45,7 +44,7 @@
           // 'fill-color': 'rgba(200, 100, 240, 0.4)',
           'fill-color': [
             "step",
-            ["get", "DN"],
+            ["get", "GRIDCODE"],
             'rgba(0, 0, 255, 0.4)',
             1,
             'rgba(255, 0, 0, 0.4)',
@@ -55,7 +54,7 @@
           // 'fill-outline-color': 'rgba(200, 100, 240, 0.8)'
           'fill-outline-color': [
             "step",
-            ["get", "DN"],
+            ["get", "GRIDCODE"],
             'rgba(10, 100, 240, 0.8)',
             1,
             'rgba(50, 100, 240, 0.8)',
@@ -69,15 +68,7 @@
       map.on('click', 'hk2018-layer', function (e) {
         new mapboxgl.Popup()
           .setLngLat(e.lngLat)
-          .setHTML(e.features[0].properties.GridcodeCl)
-          //.setHTML(e.features[0].properties.classClass)
-          .addTo(map);
-      });
-      map.on('contextmenu', 'hk2008-layer', function (e) {
-        new mapboxgl.Popup()
-          .setLngLat(e.lngLat)
-          //.setHTML(e.features[0].properties.GridcodeCl)
-          .setHTML(e.features[0].properties.classClass)
+          .setHTML(e.features[0].properties.GRIDCODE)
           .addTo(map);
       });
 
@@ -85,15 +76,9 @@
       map.on('mouseenter', 'hk2018-layer', function () {
         map.getCanvas().style.cursor = 'pointer';
       });
-      map.on('mouseenter', 'hk2008-layer', function () {
-        map.getCanvas().style.cursor = 'pointer';
-      });
 
       // Change it back to a pointer when it leaves.
       map.on('mouseleave', 'hk2018-layer', function () {
-        map.getCanvas().style.cursor = '';
-      });
-      map.on('mouseleave', 'hk2008-layer', function () {
         map.getCanvas().style.cursor = '';
       });
     });
